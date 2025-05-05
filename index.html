@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ছুটির আবেদন পত্র</title>
+  <style>
+    body {
+      font-family: 'Siyam Rupali', sans-serif;
+      background-color: #f4f4f4;
+      padding: 30px;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      color: #444;
+    }
+    input, textarea, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 12px;
+      background-color: #28a745;
+      color: white;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+    }
+    button:hover {
+      background-color: #218838;
+    }
+    .approval-section {
+      margin-top: 30px;
+      font-weight: bold;
+      color: #555;
+    }
+    .approval-section p {
+      margin: 5px 0;
+      text-align: center;
+    }
+    #successMsg {
+      display: none;
+      color: green;
+      text-align: center;
+      margin-top: 15px;
+    }
+    .half-day-time {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>ছুটির আবেদন পত্র</h2>
+    <form onsubmit="sendToWhatsApp(); return false;">
+      <label for="name">নাম:</label>
+      <input type="text" id="name" name="name" placeholder="আপনার নাম লিখুন" required>
+
+      <label for="leaveType">ছুটির ধরণ:</label>
+      <select id="leaveType" name="leaveType">
+        <option value="অসুস্থতা">অসুস্থতা</option>
+        <option value="পারিবারিক">পারিবারিক</option>
+        <option value="ব্যক্তিগত">ব্যক্তিগত</option>
+        <option value="অন্যান্য">অন্যান্য</option>
+      </select>
+
+      <label for="fromDate">ছুটি শুরুর তারিখ:</label>
+      <input type="date" id="fromDate" name="fromDate" required>
+
+      <label for="toDate">ছুটি শেষের তারিখ:</label>
+      <input type="date" id="toDate" name="toDate" required>
+
+      <label for="dayType">DAY TYPE:</label>
+      <select id="dayType" name="dayType" onchange="toggleTimeFields()">
+        <option value="FULL DAY">FULL DAY</option>
+        <option value="HALF DAY">HALF DAY</option>
+      </select>
+
+      <div id="halfDayTime" class="half-day-time">
+        <label for="fromTime">সময় শুরু:</label>
+        <input type="time" id="fromTime" name="fromTime">
+
+        <label for="toTime">সময় শেষ:</label>
+        <input type="time" id="toTime" name="toTime">
+      </div>
+
+      <label for="reason">ছুটির কারণ:</label>
+      <textarea id="reason" name="reason" rows="4" placeholder="ছুটির কারণ লিখুন..." required></textarea>
+
+      <label for="applyDate">আবেদনের তারিখ:</label>
+      <input type="date" id="applyDate" name="applyDate" required>
+
+      <button type="submit">আবেদন জমা দিন</button>
+    </form>
+
+    <p id="successMsg">✅ আবেদন সফলভাবে জমা হয়েছে!</p>
+
+    <div class="approval-section">
+      <p>APPROVED / NOT APPROVED</p>
+    </div>
+  </div>
+
+  <script>
+    function toggleTimeFields() {
+      const dayType = document.getElementById("dayType").value;
+      const timeFields = document.getElementById("halfDayTime");
+      if (dayType === "HALF DAY") {
+        timeFields.style.display = "block";
+        document.getElementById("fromTime").setAttribute("required", "required");
+        document.getElementById("toTime").setAttribute("required", "required");
+      } else {
+        timeFields.style.display = "none";
+        document.getElementById("fromTime").removeAttribute("required");
+        document.getElementById("toTime").removeAttribute("required");
+      }
+    }
+
+    function sendToWhatsApp() {
+      var name = document.getElementById("name").value;
+      var leaveType = document.getElementById("leaveType").value;
+      var fromDate = document.getElementById("fromDate").value;
+      var toDate = document.getElementById("toDate").value;
+      var reason = document.getElementById("reason").value;
+      var applyDate = document.getElementById("applyDate").value;
+      var dayType = document.getElementById("dayType").value;
+      var fromTime = document.getElementById("fromTime").value;
+      var toTime = document.getElementById("toTime").value;
+
+      var timeMsg = dayType === "HALF DAY" ? `সময়: ${fromTime} থেকে ${toTime}\n` : "";
+
+      var message = `ছুটির আবেদন\n\nনাম: ${name}\nছুটির ধরণ: ${leaveType}\nছুটির সময়কাল: ${fromDate} থেকে ${toDate}\n${dayType}\n${timeMsg}কারণ: ${reason}\nআবেদনের তারিখ: ${applyDate}\n\nAPPROVED / NOT APPROVED`;
+
+      var phoneNumber = "9733493343";
+      var whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+
+      window.open(whatsappURL, "_blank");
+      document.getElementById("successMsg").style.display = "block";
+    }
+  </script>
+</body>
+</html>
